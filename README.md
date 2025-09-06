@@ -1,5 +1,7 @@
 # Recipe Box (React + styled-components)
 
+![alt text](image-1.png)
+
 **Live Demo:** https://a2rp.github.io/recipe-box/
 
 A lightweight, frontend-only Recipe Box to save your favorite recipes with **ingredients** and **steps**. Dark-theme friendly and fully **LocalStorage** powered.
