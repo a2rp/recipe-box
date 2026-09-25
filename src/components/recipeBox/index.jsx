@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Styled } from "./styled";
 
 /** -------------------------
@@ -51,11 +51,11 @@ export default function RecipeBox() {
             hideCancel: false,
             ...opts,
         });
-    const handleConfirm = () => {
+    const handleConfirm = useCallback(() => {
         const fn = confirm?.onConfirm;
         setConfirm(null);
         if (typeof fn === "function") fn();
-    };
+    }, [confirm]);
     useEffect(() => {
         if (!confirm) return;
         const onKey = (e) => {
@@ -64,7 +64,7 @@ export default function RecipeBox() {
         };
         document.addEventListener("keydown", onKey);
         return () => document.removeEventListener("keydown", onKey);
-    }, [confirm]);
+    }, [confirm, handleConfirm]);
 
     useEffect(
         () => localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes)),
@@ -135,7 +135,7 @@ export default function RecipeBox() {
         setImageUrl("");
         setConfirm({
             title: "Saved",
-            message: `Added “${t}”.`,
+            message: `Added "${t}".`,
             confirmText: "OK",
             hideCancel: true,
         });
@@ -187,7 +187,7 @@ export default function RecipeBox() {
                     <div>
                         <Styled.Title>Recipe Box</Styled.Title>
                         <Styled.Sub>
-                            Save your favorite recipes with ingredients & steps — LocalStorage.
+                            Save your favorite recipes with ingredients and steps - LocalStorage.
                         </Styled.Sub>
                     </div>
                     <Styled.BadgeRow>
@@ -275,7 +275,7 @@ export default function RecipeBox() {
                             aria-label="Sort"
                         >
                             <option value="created">Newest</option>
-                            <option value="title">Title A–Z</option>
+                            <option value="title">Title A-Z</option>
                             <option value="category">By category</option>
                         </Styled.Select>
                         <Styled.Input

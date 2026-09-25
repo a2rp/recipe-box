@@ -207,3 +207,66 @@ textarea:focus-visible {
         flex-wrap: wrap;
     }
 }
+
+
+
+.app-menu-button {
+    display: none;
+}
+.app-menu-button:hover {
+    border-color: #66c7ff;
+    box-shadow: 0 0 0 3px rgba(102, 199, 255, 0.12);
+    color: #66c7ff;
+}
+.mobile-header-menu {
+    display: none;
+}
+.recipe-app-shell button {
+    transition: border-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
+}
+.recipe-app-shell button:hover:not(:disabled) {
+    border-color: #66c7ff;
+    box-shadow: 0 0 0 3px rgba(102, 199, 255, 0.1);
+}
+@media (max-width: 620px) {
+    .app-menu-button {
+        align-items: center;
+        background: transparent;
+        border: 1px solid #29425f;
+        border-radius: 9px;
+        color: #b9cbe0;
+        cursor: pointer;
+        display: inline-flex;
+        height: 38px;
+        justify-content: center;
+        width: 38px;
+    }
+    .header-actions > a:nth-child(1),
+    .header-actions > a:nth-child(2) {
+        display: none;
+    }
+    .mobile-header-menu {
+        align-items: stretch;
+        background: rgba(7, 17, 31, 0.98);
+        border-bottom: 1px solid #263a52;
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        padding: 10px 16px;
+        position: fixed;
+        right: 0;
+        top: 78px;
+        width: 100%;
+        z-index: 19;
+    }
+    .mobile-header-menu:not(.is-open) {
+        display: none;
+    }
+    .mobile-header-menu a {
+        border: 1px solid #29425f;
+        border-radius: 9px;
+        color: #b9cbe0;
+        padding: 8px 12px;
+        text-decoration: none;
+    }
+}

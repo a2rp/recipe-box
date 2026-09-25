@@ -1,72 +1,61 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { FiArrowUp } from "react-icons/fi";
 import styled from "styled-components";
 
 export default function ScrollToTopButton({ threshold = 50 }) {
-    const [visible, setVisible] = React.useState(false);
+    const [visible, setVisible] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const onScroll = () => setVisible(window.scrollY > threshold);
-        onScroll(); // run once on mount
+        onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, [threshold]);
-
-    const goTop = () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
 
     return (
         <Styled.Wrapper
             type="button"
             aria-label="Scroll to top"
-            onClick={goTop}
+            title="Scroll to top"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             data-visible={visible}
         >
-            ↑
+            <FiArrowUp />
         </Styled.Wrapper>
     );
 }
 
-export const Styled = {
+const Styled = {
     Wrapper: styled.button`
-    position: fixed;
-    right: 24px;
-    bottom: 24px;
-    z-index: 1000;
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 1000;
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border: 1px solid #36516f;
+        border-radius: 999px;
+        color: #edf5ff;
+        background: #142943;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: border-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
 
-    width: 44px;
-    height: 44px;
-    border-radius: 999px;
+        &[data-visible="true"] {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
 
-    /* Neutral styling: inherits your site color */
-    color: inherit;
-    background: transparent;
-    border: 1px solid currentColor;
-
-    display: grid;
-    place-items: center;
-    font-size: 20px;
-    cursor: pointer;
-
-    opacity: 0;
-    transform: translateY(8px);
-    pointer-events: none;
-    transition: opacity 200ms ease, transform 200ms ease;
-
-    &[data-visible="true"] {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    &:focus-visible {
-      outline: 2px solid currentColor;
-      outline-offset: 2px;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-      transform: none;
-    }
-  `,
+        &:hover {
+            border-color: #66c7ff;
+            box-shadow: 0 0 0 3px rgba(102, 199, 255, 0.12);
+            color: #66c7ff;
+        }
+    `,
 };
