@@ -47,7 +47,7 @@ const App = () => {
         <div className="recipe-app-shell">
             <header className="app-header">
                 <a className="app-brand" href="#top" onClick={closeMenu} aria-label="Recipe Box home">
-                    <img src="/recipe-box/logo.png" alt="Ashish Ranjan logo" />
+                    <img src={import.meta.env.BASE_URL + "logo.png"} alt="Ashish Ranjan logo" />
                     <span>
                         <small>LOCALSTORAGE KITCHEN</small>
                         <strong>Recipe Box</strong>

@@ -5,7 +5,7 @@ import { Styled } from "./styled";
  *  Storage & helpers
  *  ------------------------- */
 const STORAGE_KEY = "recipe-box.v1";
-const FALLBACK_IMG = new URL("./noRecipe.png", document.baseURI).toString();
+const FALLBACK_IMG = import.meta.env.BASE_URL + "noRecipe.png";
 
 const uid = () =>
     `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
@@ -13,7 +13,33 @@ const toInt = (v) => Number(v) || 0;
 
 const load = () => {
     try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? [];
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        if (!Array.isArray(stored)) return [];
+
+        return stored.flatMap((recipe) => {
+            if (!recipe || typeof recipe !== "object" || typeof recipe.id !== "string") {
+                return [];
+            }
+
+            const title = typeof recipe.title === "string" ? recipe.title.trim() : "";
+            if (!title) return [];
+
+            return [{
+                ...recipe,
+                title,
+                category: typeof recipe.category === "string" ? recipe.category : "",
+                tags: Array.isArray(recipe.tags)
+                    ? recipe.tags.filter((tag) => typeof tag === "string")
+                    : [],
+                ingredients: Array.isArray(recipe.ingredients)
+                    ? recipe.ingredients.filter((item) => item && typeof item.text === "string")
+                    : [],
+                steps: Array.isArray(recipe.steps)
+                    ? recipe.steps.filter((item) => item && typeof item.text === "string")
+                    : [],
+                createdAt: Number.isFinite(Number(recipe.createdAt)) ? Number(recipe.createdAt) : 0,
+            }];
+        });
     } catch {
         return [];
     }
@@ -59,17 +85,22 @@ export default function RecipeBox() {
     useEffect(() => {
         if (!confirm) return;
         const onKey = (e) => {
-            if (e.key === "Escape") setConfirm(null);
-            if (e.key === "Enter") handleConfirm();
+            if (e.key === "Escape") {
+                e.preventDefault();
+                setConfirm(null);
+            }
         };
         document.addEventListener("keydown", onKey);
         return () => document.removeEventListener("keydown", onKey);
-    }, [confirm, handleConfirm]);
+    }, [confirm]);
 
-    useEffect(
-        () => localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes)),
-        [recipes]
-    );
+    useEffect(() => {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
+        } catch {
+            // Keep the current session usable when browser storage is unavailable.
+        }
+    }, [recipes]);
 
     // derived
     const allCategories = useMemo(

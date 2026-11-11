@@ -1,7 +1,8 @@
 {
-    "name": "frontend",
+    "name": "recipe-box",
     "private": true,
     "version": "0.0.0",
+    "description": "LocalStorage recipe organizer for creating, editing, searching, and organizing recipes",
     "type": "module",
     "scripts": {
         "dev": "vite",
